@@ -16,7 +16,7 @@ public class Game {
 
 		// プレイヤーのターン
 		do {
-			System.out.println(d.canLoop);
+			System.out.println(d.isDrawable);
 			d.showHand();
 			System.out.println("\nカードを引きますか？ (1: はい, 2: いいえ) :");
 			String key = sc.next();
@@ -26,12 +26,12 @@ public class Game {
 				d.draw();
 				break;
 			case "2":
-				d.canLoop = false;
+				d.isDrawable = false;
 				break;
 			default:
 				break;
 			}
-		} while (d.canLoop);
+		} while (d.isDrawable);
 
 		sc.close();
 	}

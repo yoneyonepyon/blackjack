@@ -2,7 +2,7 @@ import java.util.Random;
 
 public class Deck {
 
-	boolean canLoop = true; // プレイヤーが手札を引き続けることができるか
+	boolean isDrawable = true; // プレイヤーが手札を引き続けることができるか
 	Card[] cards = new Card[52]; // 山札のカード
 	Card[] hand = new Card[0]; // 手札のカード
 	String name; // プレイヤーの名前
