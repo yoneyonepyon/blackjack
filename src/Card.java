@@ -51,7 +51,7 @@ public class Card {
 			System.out.print("エース");
 			break;
 		default:
-			System.out.print(rank);
+			System.out.print(rank + 1);
 			break;
 		}
 	}
