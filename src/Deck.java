@@ -1,3 +1,4 @@
+import java.util.Random;
 
 public class Deck {
 
@@ -14,9 +15,27 @@ public class Deck {
 		for (int i = 0; i < 13; i++) {
 			for (int j = 0; j < 4; j++) {
 				Card c = new Card(j, i);
-				System.out.println((4 * j) + i);
 				cards[ii++] = c;
 			}
+		}
+	}
+
+	// 山札をシャッフルする(おそらくすごい単純な方法)
+	public void shuffle() {
+		Random rnd = new Random();
+		for (int i = 0; i < cards.length; i++) {
+			int j = rnd.nextInt(cards.length);
+			Card c1 = cards[i];
+			Card c2 = cards[j];
+			cards[j] = c1;
+			cards[i] = c2;
+		}
+	}
+
+	// n回シャッフルする
+	public void shuffle(int n) {
+		for (int i = 0; i < n; i++) {
+			shuffle();
 		}
 	}
 
