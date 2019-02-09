@@ -2,10 +2,12 @@ import java.util.Random;
 
 public class Deck {
 
-	boolean isDrawable = true; // プレイヤーが手札を引き続けることができるか
+	boolean isDrawable = true; // 手札を引き続けることができるか
 	int playerSum = 0; // プレイヤーの役の合計
+	int dealerSum = 0; // ディーラーの役の合計
 	Card[] cards = new Card[52]; // 山札のカード
-	Card[] hand = new Card[0]; // 手札のカード
+	Card[] hand = new Card[0]; // プレイヤーの手札
+	Card[] dealerHand = new Card[0]; // ディーラーの手札
 	String name; // プレイヤーの名前
 
 	public Deck(String n) {
@@ -24,26 +26,41 @@ public class Deck {
 	}
 
 	// 1枚カードをひく
-	public Card draw() {
-		Card[] c = draw(1);
+	public Card drawPlayer() {
+		Card[] c = drawPlayer(1);
 		return c[0];
 	}
 
 	// n枚分のカードを配列で返す
-	public Card[] draw(int n) {
+	public Card[] drawPlayer(int n) {
+		return draw(n, true);
+	}
+
+	public Card drawDealer() {
+		Card[] c = drawDealer(1);
+		return c[0];
+	}
+
+	public Card[] drawDealer(int n) {
+		return draw(n, false);
+	}
+
+	private Card[] draw(int n, boolean isPlayer) {
 		// カードをこれ以上引けない場合はnullを返す
 		if (cards.length - n < 0) {
 			return null;
 		}
 
+		Card[] deck = isPlayer ? hand : dealerHand;
+
 		// 引いた手札、引いた分を加えた手札と残りのカード用の配列を用意
 		Card[] drawCards = new Card[n];
-		Card[] handCards = new Card[hand.length + n];
+		Card[] handCards = new Card[deck.length + n];
 		Card[] deckCards = new Card[cards.length - n];
 
 		// 現在の手札を新しい配列にコピー
-		for (int i = 0; i < hand.length; i++) {
-			handCards[i] = hand[i];
+		for (int i = 0; i < deck.length; i++) {
+			handCards[i] = deck[i];
 		}
 
 		// 引いたカードを山札に加える
@@ -51,14 +68,19 @@ public class Deck {
 			Card c = cards[i];
 			if (i < n) {
 				drawCards[i] = c;
-				handCards[i + hand.length] = c;
+				handCards[i + deck.length] = c;
 			} else {
 				deckCards[i - n] = c;
 			}
 		}
 
+		if (isPlayer) {
+			hand = handCards;
+		} else {
+			dealerHand = handCards;
+		}
+
 		cards = deckCards;
-		hand = handCards;
 		return drawCards;
 	}
 
@@ -90,24 +112,35 @@ public class Deck {
 		System.out.println("山札の枚数: " + cards.length);
 	}
 
+	// プレイヤーの手札のshowName()を実行する
+	public void showPlayerHand() {
+		playerSum = showHand(name, hand);
+		System.out.println("手札の合計値: " + playerSum);
+	}
+
+	// ディーラーの手札のshowName()を実行する
+	public void showDealerHand() {
+		dealerSum = showHand("ディーラー", dealerHand);
+		System.out.println("手札の合計値: " + dealerSum);
+	}
+
 	// 手札のshowName()を実行する
-	public void showHand() {
-		System.out.println(name + "の手札:");
+	private int showHand(String userName, Card[] deck) {
+		System.out.println(userName + "の手札:");
 		for (Card c : hand) {
 			if (c != null) {
 				c.showName();
 			}
 		}
-		playerSum = calcHand();
-		System.out.println("手札の合計値: " + playerSum);
+		return calcHand(deck);
 	}
 
 	// 手札の合計値を計算する
-	private int calcHand() {
+	private int calcHand(Card[] deck) {
 		int sum = 0;
 
 		// エースを11として計算する
-		for (Card c : hand) {
+		for (Card c : deck) {
 			sum += c.getValue(true);
 		}
 
@@ -117,7 +150,7 @@ public class Deck {
 
 		// エースを1として再計算
 		sum = 0;
-		for (Card c : hand) {
+		for (Card c : deck) {
 			sum += c.getValue(false);
 		}
 		return sum;
