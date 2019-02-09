@@ -3,6 +3,7 @@ import java.util.Random;
 public class Deck {
 
 	boolean isDrawable = true; // プレイヤーが手札を引き続けることができるか
+	int playerSum = 0; // プレイヤーの役の合計
 	Card[] cards = new Card[52]; // 山札のカード
 	Card[] hand = new Card[0]; // 手札のカード
 	String name; // プレイヤーの名前
@@ -97,11 +98,33 @@ public class Deck {
 				c.showName();
 			}
 		}
-		System.out.println("手札の枚数: " + hand.length);
+		playerSum = calcHand();
+		System.out.println("手札の合計値: " + playerSum);
+	}
+
+	// 手札の合計値を計算する
+	private int calcHand() {
+		int sum = 0;
+
+		// エースを11として計算する
+		for (Card c : hand) {
+			sum += c.getValue(true);
+		}
+
+		if (sum <= 21) {
+			return sum;
+		}
+
+		// エースを1として再計算
+		sum = 0;
+		for (Card c : hand) {
+			sum += c.getValue(false);
+		}
+		return sum;
 	}
 
 	public void greet() {
-		System.out.println(name + "さん、ようこそ。");
+		System.out.println("\n" + name + "さん、ようこそ。\n");
 	}
 
 }
