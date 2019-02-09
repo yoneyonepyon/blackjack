@@ -2,6 +2,7 @@ import java.util.Random;
 
 public class Deck {
 
+	boolean canLoop = true; // プレイヤーが手札を引き続けることができるか
 	Card[] cards = new Card[52]; // 山札のカード
 	Card[] hand = new Card[0]; // 手札のカード
 	String name; // プレイヤーの名前
@@ -97,6 +98,10 @@ public class Deck {
 			}
 		}
 		System.out.println("手札の枚数: " + hand.length);
+	}
+
+	public void greet() {
+		System.out.println(name + "さん、ようこそ。");
 	}
 
 }
